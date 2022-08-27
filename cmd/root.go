@@ -29,6 +29,9 @@ import (
 
 const (
 	bootstrapFlag = "bootstrap"
+	passwordFlag  = "password"
+	saslFlag      = "sasl"
+	usernameFlag  = "username"
 )
 
 var rootCmd = &cobra.Command{
@@ -45,5 +48,10 @@ func Execute() {
 
 func init() {
 	rootCmd.PersistentFlags().StringP(bootstrapFlag, "b", "", "Bootstrap server to connect to (i.e. localhost:9092)")
-	rootCmd.MarkPersistentFlagRequired(bootstrapFlag)
+	_ = rootCmd.MarkPersistentFlagRequired(bootstrapFlag)
+
+	rootCmd.PersistentFlags().Bool(saslFlag, false, "Use SASL auth")
+	rootCmd.PersistentFlags().StringP(usernameFlag, "u", "", "Username for SASL auth")
+	rootCmd.PersistentFlags().StringP(passwordFlag, "p", "", "Password for SASL auth")
+	rootCmd.MarkFlagsRequiredTogether(saslFlag, usernameFlag, passwordFlag)
 }
