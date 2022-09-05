@@ -2,12 +2,9 @@ package internal
 
 import (
 	"context"
-	"crypto/tls"
 	"fmt"
-	"time"
 
 	"github.com/segmentio/kafka-go"
-	"github.com/segmentio/kafka-go/sasl/plain"
 )
 
 func Ping(ctx context.Context, bootstrap string) error {
@@ -24,17 +21,7 @@ func Ping(ctx context.Context, bootstrap string) error {
 }
 
 func PingSASL(ctx context.Context, bootstrap, username, password string) error {
-	mechanism := plain.Mechanism{
-		Username: username,
-		Password: password,
-	}
-
-	dialer := kafka.Dialer{
-		Timeout:       10 * time.Second,
-		DualStack:     true,
-		SASLMechanism: mechanism,
-		TLS:           &tls.Config{},
-	}
+	dialer := newSASLPlainDialer(username, password)
 
 	fmt.Printf("Attempting connection to %s ...", bootstrap)
 

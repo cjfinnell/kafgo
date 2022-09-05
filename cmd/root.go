@@ -54,4 +54,7 @@ func init() {
 	rootCmd.PersistentFlags().StringP(usernameFlag, "u", "", "Username for SASL auth")
 	rootCmd.PersistentFlags().StringP(passwordFlag, "p", "", "Password for SASL auth")
 	rootCmd.MarkFlagsRequiredTogether(saslFlag, usernameFlag, passwordFlag)
+
+	rootCmd.AddCommand(pingCmd)
+	rootCmd.AddCommand(consumeCmd)
 }
