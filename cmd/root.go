@@ -24,6 +24,8 @@ package cmd
 import (
 	"os"
 
+	"github.com/cjfinnell/kafgo/internal"
+	"github.com/segmentio/kafka-go"
 	"github.com/spf13/cobra"
 )
 
@@ -57,4 +59,17 @@ func init() {
 
 	rootCmd.AddCommand(pingCmd)
 	rootCmd.AddCommand(consumeCmd)
+}
+
+func buildDialer(cmd *cobra.Command) *kafka.Dialer {
+	var opts []internal.DialerOption
+
+	if cmd.Flag(saslFlag).Value.String() == "true" {
+		opts = append(opts, internal.WithSASLPlain(
+			cmd.Flag(usernameFlag).Value.String(),
+			cmd.Flag(passwordFlag).Value.String(),
+		))
+	}
+
+	return internal.NewDialer(opts...)
 }

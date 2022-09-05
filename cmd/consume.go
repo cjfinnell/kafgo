@@ -12,10 +12,9 @@ var consumeCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		return internal.Consume(
 			cmd.Context(),
+			buildDialer(cmd),
 			cmd.Flag(bootstrapFlag).Value.String(),
 			args[0],
-			cmd.Flag(usernameFlag).Value.String(),
-			cmd.Flag(passwordFlag).Value.String(),
 		)
 	},
 }

@@ -8,7 +8,7 @@ import (
 	"github.com/segmentio/kafka-go"
 )
 
-func Consume(ctx context.Context, bootstrap, topic, username, password string) error {
+func Consume(ctx context.Context, dialer *kafka.Dialer, bootstrap, topic string) error {
 	fmt.Printf("Attempting connection to %s ...", bootstrap)
 
 	groupID := fmt.Sprintf("kafgo-%d", time.Now().Unix())
@@ -17,12 +17,8 @@ func Consume(ctx context.Context, bootstrap, topic, username, password string) e
 		Brokers: []string{bootstrap},
 		GroupID: groupID,
 		Topic:   topic,
+		Dialer:  dialer,
 	}
-
-	if username != "" && password != "" {
-		readerConfig.Dialer = newSASLPlainDialer(username, password)
-	}
-
 	err := readerConfig.Validate()
 	if err != nil {
 		return err
